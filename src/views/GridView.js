@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {View, Text,TouchableOpacity,Image,ActivityIndicator,Picker} from "react-native";
+import {View, Text,TouchableOpacity,Image,ActivityIndicator,Picker,StyleSheet} from "react-native";
 import Grid from "../components/Grid";
 import {connect} from "react-redux";
 import {initData,fetchData,removeData} from "../store/action";
@@ -15,7 +15,7 @@ class GridItem extends Component {
         const {farm,server,id,secret} = row;
         const uri = `http://farm${farm}.static.flickr.com/${server}/${id}_${secret}.jpg`;
         return <TouchableOpacity
-            style={{flex:1,borderWidth:1,borderColor:"#7c55a8"}}
+            style={[{flex:1}, styles.gridCell]}
             onPress={_=>onImageSelect(uri)}
             onLayout={_=>{
                 const {nativeEvent: {layout: {width}}} = _;
@@ -99,15 +99,15 @@ class GridView extends Component {
             return <Text>{error}</Text>;
         }
         if(!photos){
-            return <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+            return <View style={[{flex:1},styles.center]}>
                 <ActivityIndicator
                     size={"large"}
                     color={"blue"}
                 />
             </View>
         }
-        return <View style={{flex:1,padding:20}}>
-            <View style={{flexDirection:"row",justifyContent:"flex-end"}}>
+        return <View style={styles.container}>
+            <View style={styles.innerContainer}>
                 <Text>Number Of Columns : </Text>
                 <Picker
                     selectedValue={noOfCardPerRow}
@@ -128,7 +128,7 @@ class GridView extends Component {
                 noOfCardPerRow={noOfCardPerRow}
                 loadMoreData={this.loadMoreData}
                 ListFooterComponent={_=>{
-                    return showFooterLoading?<View style={{justifyContent:"center",alignItems:"center"}}>
+                    return showFooterLoading?<View style={styles.center}>
                             <ActivityIndicator
                                 size={"small"}
                                 color={"blue"}
@@ -139,6 +139,13 @@ class GridView extends Component {
         </View>
     }
 }
+
+const styles = StyleSheet.create({
+    container:{flex:1,padding:20},
+    innerContainer:{flexDirection:"row",justifyContent:"flex-end"},
+    center:{justifyContent:"center",alignItems:"center"},
+    gridCell:{borderWidth:1,borderColor:"#7c55a8"}
+});
 
 GridView = connect((state,ownProps) => {
     let mapStateToProps = {};

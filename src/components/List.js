@@ -19,13 +19,14 @@ export default class List extends React.Component {
             onScroll,
             data,
             loadMoreData,
-            style
+            style,
+            onEndReachedThreshold
         } = this.props;
         return (<FlatList
                     onEndReached={_ => {
                         loadMoreData && loadMoreData(data);
                     }}
-                    onEndReachedThreshold={100}
+                    onEndReachedThreshold={onEndReachedThreshold}
                     onScroll={onScroll}
                     data={data}
                     renderItem={this.renderItem}
@@ -37,8 +38,15 @@ export default class List extends React.Component {
 
 List.propTypes = {
     data: PropTypes.array.isRequired,
-    renderItem:PropTypes.func.isRequired
+    renderItem:PropTypes.func.isRequired,
+    onScroll:PropTypes.func,
+    loadMoreData:PropTypes.func,
+    onEndReachedThreshold:PropTypes.number,
+    style:PropTypes.object
 };
 
 List.defaultProps = {
+    data:[],
+    renderItem:_=>null,
+    onEndReachedThreshold:100
 };

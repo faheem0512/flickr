@@ -1,6 +1,7 @@
 import React from "react";
 import {View} from "react-native";
 import List from "./List";
+import PropTypes from "prop-types";
 
 export class Grid extends React.Component {
     constructor(props) {
@@ -26,7 +27,6 @@ export class Grid extends React.Component {
 
     render() {
         const { renderItem, gutter,noOfCardPerRow, ...rest } = this.props;
-        let rowCount = 0;
         return (<List
                     {...rest}
                     data={this.state.gridData}
@@ -41,10 +41,9 @@ export class Grid extends React.Component {
                                     </View>
                                 );
                             } else {
-                                resultRow.push(<View style={[{flex:1,flexShrink:0},i && {marginLeft:gutter}]} />);
+                                resultRow.push(<View style={[{flex:1,flexShrink:0},i && {marginLeft:gutter}]} key={`${item[i].id || i+"__grid_card_row"}`}  />);
                             }
                         }
-                        rowCount++;
                         return (
                             <View style={[{flexDirection:"row"},{marginTop:gutter}]}>
                                 {resultRow}
@@ -54,6 +53,14 @@ export class Grid extends React.Component {
                 />);
     }
 }
+
+Grid.propTypes = {
+    data:PropTypes.array.isRequired,
+    renderItem:PropTypes.func.isRequired,
+    noOfCardPerRow:PropTypes.number,
+    gutter:PropTypes.number
+};
+
 
 Grid.defaultProps = {
     noOfCardPerRow: 2,

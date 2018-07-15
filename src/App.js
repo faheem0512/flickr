@@ -57,7 +57,7 @@ class App extends Component {
                     <TextInput
                         style={styles.input}
                         value={inputValue}
-                        placeholder={"Type To Search"}
+                        placeholder={"Search Images"}
                         onChangeText={this.onChangeText}
                         onSubmitEditing={this.onSubmitEditing}
                     />
