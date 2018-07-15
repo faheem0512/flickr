@@ -21,7 +21,6 @@ export default function (state = {}, action = {}) {
             }
             if(append && data && oldData){
                 if(typeof append === "function"){
-                    console.log(oldData,data);
                     data = append(oldData,data);
                 } else {
                     if(Array.isArray(oldData)){

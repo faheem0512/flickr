@@ -6,11 +6,40 @@ import {initData,fetchData,removeData} from "../store/action";
 import uuid from "uuid";
 
 
+
+class GridItem extends Component {
+    state = {};
+    render(){
+        const {row,onImageSelect} = this.props;
+        const {imageWidth,imageHeight} = this.state;
+        const {farm,server,id,secret} = row;
+        const uri = `http://farm${farm}.static.flickr.com/${server}/${id}_${secret}.jpg`;
+        return <TouchableOpacity
+            style={{flex:1,borderWidth:1,borderColor:"#7c55a8"}}
+            onPress={_=>onImageSelect(uri)}
+            onLayout={_=>{
+                const {nativeEvent: {layout: {width}}} = _;
+                this.setState({
+                    imageWidth:width,
+                    imageHeight:width
+                });
+            }}
+        >
+            <Image
+                resizeMode={"cover"}
+                style={{width: imageWidth, height: imageHeight}}
+                source={{uri}} />
+        </TouchableOpacity>;
+    }
+}
+
+
 class GridView extends Component {
     constructor(props){
         super(props);
         this.loadMoreData = this.loadMoreData.bind(this);
         this.onAppendData = this.onAppendData.bind(this);
+        this.onImageSelect = this.onImageSelect.bind(this);
     }
     componentWillMount() {
         const {navigation, initData,uniqueId} = this.props;
@@ -67,7 +96,7 @@ class GridView extends Component {
             return <Text>{error}</Text>;
         }
         if(!photos){
-            return <View style={{justifyContent:"center",alignItems:"center"}}>
+            return <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
                 <ActivityIndicator
                     size={"large"}
                     color={"blue"}
@@ -75,26 +104,23 @@ class GridView extends Component {
             </View>
         }
         return <View style={{flex:1,padding:20}}>
-            {showFooterLoading && <Text>Foooterr loading</Text>}
             <Grid
                 style={{flex:1}}
                 data={photos.photo}
                 renderItem={(row={})=>{
-                    const {farm,server,id,secret} = row;
-                    const uri = `http://farm${farm}.static.flickr.com/${server}/${id}_${secret}.jpg`;
-                    return <TouchableOpacity
-                        style={{flex:1,borderWidth:1,borderColor:"#7c55a8"}}
-                        onPress={_=>this.onImageSelect(uri)}
-                    >
-                        <Image
-                            resizeMode={"contain"}
-                            style={{width: 50, height: 50}}
-                            source={{uri}} />
-                    </TouchableOpacity>;
+                    return <GridItem row={row} onImageSelect={this.onImageSelect} />
                 }}
                 gutter={20}
                 noOfCardPerRow={2}
                 loadMoreData={this.loadMoreData}
+                ListFooterComponent={_=>{
+                    return showFooterLoading?<View style={{justifyContent:"center",alignItems:"center"}}>
+                            <ActivityIndicator
+                                size={"small"}
+                                color={"blue"}
+                            />
+                        </View>:null;
+                }}
             />
         </View>
     }
