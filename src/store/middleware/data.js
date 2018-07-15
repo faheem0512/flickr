@@ -9,7 +9,7 @@ export default function (store) {
                     const {append,onSuccess} = action.payload;
                         next({
                             ...action,
-                            payload: {...action.payload, showLoading: true,showFooterLoading:append}
+                            payload: {...action.payload, showLoading: !append && true,showFooterLoading:!!append}
                         });
                     return networkFetch({
                         ...action.payload

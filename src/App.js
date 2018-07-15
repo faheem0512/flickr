@@ -37,7 +37,7 @@ class App extends Component {
                 text:inputValue
             },
             onSuccess:data=>{
-                navigation.push("GridView",{data});
+                navigation.push("GridView",{data,inputValue});
             }
         });
     }

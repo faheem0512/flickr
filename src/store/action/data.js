@@ -1,4 +1,9 @@
-import {FETCH_DATA,REMOVE_DATA} from "./types"
+import {INIT_DATA,FETCH_DATA,REMOVE_DATA} from "./types"
+
+const initData = payload => ({
+    type:INIT_DATA,
+    payload
+});
 
 const fetchData = payload => ({
     type:FETCH_DATA,
@@ -12,7 +17,10 @@ const removeData = payload => ({
 });
 
 
+
+
 module.exports = {
+    initData,
     fetchData,
     removeData
 };
