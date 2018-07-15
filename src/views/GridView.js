@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import {View, Text,TouchableOpacity,Image,ActivityIndicator} from "react-native";
+import {View, Text,TouchableOpacity,Image,ActivityIndicator,Picker} from "react-native";
 import Grid from "../components/Grid";
 import {connect} from "react-redux";
 import {initData,fetchData,removeData} from "../store/action";
@@ -37,6 +37,9 @@ class GridItem extends Component {
 class GridView extends Component {
     constructor(props){
         super(props);
+        this.state = {
+            noOfCardPerRow:2
+        };
         this.loadMoreData = this.loadMoreData.bind(this);
         this.onAppendData = this.onAppendData.bind(this);
         this.onImageSelect = this.onImageSelect.bind(this);
@@ -57,7 +60,6 @@ class GridView extends Component {
         const _mergedData = [...oldData["photos"]["photo"], ...newData["photos"]["photo"]];
         let dataToReturn = {...oldData, ...newData};
         dataToReturn["photos"]["photo"] = _mergedData;
-        console.log("dataToReturn",dataToReturn);
         return dataToReturn;
     }
     loadMoreData(){
@@ -90,6 +92,7 @@ class GridView extends Component {
     }
     render() {
         const {dataProps={}} = this.props;
+        const {noOfCardPerRow} = this.state;
         const {data={},showFooterLoading,error} = dataProps;
         const {photos} = data;
         if(error){
@@ -104,6 +107,17 @@ class GridView extends Component {
             </View>
         }
         return <View style={{flex:1,padding:20}}>
+            <View style={{flexDirection:"row",justifyContent:"flex-end"}}>
+                <Text>Number Of Columns : </Text>
+                <Picker
+                    selectedValue={noOfCardPerRow}
+                    style={{ height: 20, width: 80 }}
+                    onValueChange={(noOfCardPerRow) => this.setState({noOfCardPerRow})}>
+                    <Picker.Item label="2" value={2} />
+                    <Picker.Item label="3" value={3} />
+                    <Picker.Item label="4" value={4} />
+                </Picker>
+            </View>
             <Grid
                 style={{flex:1}}
                 data={photos.photo}
@@ -111,7 +125,7 @@ class GridView extends Component {
                     return <GridItem row={row} onImageSelect={this.onImageSelect} />
                 }}
                 gutter={20}
-                noOfCardPerRow={2}
+                noOfCardPerRow={noOfCardPerRow}
                 loadMoreData={this.loadMoreData}
                 ListFooterComponent={_=>{
                     return showFooterLoading?<View style={{justifyContent:"center",alignItems:"center"}}>

@@ -19,7 +19,7 @@ export class Grid extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.data !== nextProps.data) {
+        if ((this.props.data !== nextProps.data) || (this.props.noOfCardPerRow !== nextProps.noOfCardPerRow)) {
             this.setState({ gridData: this.getGridFormatData(nextProps) });
         }
     }
